@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import escuelaing.com.co.bowmobileapp.data.entities.LoginWrapper;
 import escuelaing.com.co.bowmobileapp.data.entities.Party;
 import escuelaing.com.co.bowmobileapp.data.entities.Token;
+import escuelaing.com.co.bowmobileapp.data.entities.User;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -48,9 +49,9 @@ public class RetrofitNetwork
                     Response<Token> execute = call.execute();
                     requestCallback.onSuccess( execute.body() );
                 }
-                catch ( IOException e )
+                catch ( Exception e )
                 {
-                    requestCallback.onFailed( new NetworkException( null, e ) );
+                    requestCallback.onFailed( new NetworkException( "Error en la autenticación", e ) );
                 }
             }
         } );
@@ -73,6 +74,29 @@ public class RetrofitNetwork
                 catch ( IOException e )
                 {
                     requestCallback.onFailed( new NetworkException( null, e ) );
+                }
+            }
+        } );
+    }
+
+    @Override
+    public void addNewUser(final User user, final RequestCallback<User> requestCallback ) {
+
+        backgroundExecutor.execute( new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                final User myUser= user;
+                Call call = networkService.addUser(myUser);
+                try
+                {
+                    Response<User> execute = call.execute();
+                    requestCallback.onSuccess( execute.body() );
+                }
+                catch ( IOException e )
+                {
+                    requestCallback.onFailed( new NetworkException( "Error añadiendo usuario", e ) );
                 }
             }
         } );

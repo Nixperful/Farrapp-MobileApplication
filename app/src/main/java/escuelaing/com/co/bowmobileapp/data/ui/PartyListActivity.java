@@ -40,13 +40,36 @@ public class PartyListActivity extends AppCompatActivity {
 
         setViewComponents();
         setRecyclerViewComponents();
+        setNetworkComponents();
         //actionListenersInitialization();
+    }
 
+    private void setNetworkComponents() {
+        getPartiesFromServer();
+    }
 
+    private void getPartiesFromServer() {
+        InitialActivity.retrofitNetwork.getParties(new RequestCallback<Map<Integer,Party>>() {
+            @Override
+            public void onSuccess(Map<Integer,Party> response) {
+                for(Integer p: response.keySet()){
+                  System.out.println(response.get(p).getPartyName());
+                }
+                Collection partiesValues = response.values();
+                if (partiesValues instanceof List)
+                    parties = (List)partiesValues;
+                else
+                    parties = new ArrayList(partiesValues);
+                }
+
+            @Override
+            public void onFailed(NetworkException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void setViewComponents() {
-        parties = (List<Party>) getIntent().getSerializableExtra("parties");
         toolBar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(toolBar);
         if(getSupportActionBar()!=null){
