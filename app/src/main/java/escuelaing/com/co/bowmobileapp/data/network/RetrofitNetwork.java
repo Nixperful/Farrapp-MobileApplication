@@ -71,7 +71,7 @@ public class RetrofitNetwork
                     Response<Map<Integer,Party>> execute = call.execute();
                     requestCallback.onSuccess( execute.body() );
                 }
-                catch ( IOException e )
+                catch ( Exception e )
                 {
                     requestCallback.onFailed( new NetworkException( null, e ) );
                 }
@@ -94,7 +94,7 @@ public class RetrofitNetwork
                     Response<User> execute = call.execute();
                     requestCallback.onSuccess( execute.body() );
                 }
-                catch ( IOException e )
+                catch ( Exception e )
                 {
                     requestCallback.onFailed( new NetworkException( "Error añadiendo usuario", e ) );
                 }
